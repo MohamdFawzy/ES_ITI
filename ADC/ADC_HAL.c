@@ -9,6 +9,7 @@ File name: 	ADC_HAL.c
 #include "ADC_priv.h"
 
 /*******************************************************/
+
 void ADC_Init(){
 	//ENABLE ADC , CHOOSE V REF , CHOOSE PRSCALER , DATA ADJUSTMENT.
 	#if ADC_ENABLED == ADC_ON
@@ -26,7 +27,7 @@ void ADC_Init(){
 	#endif
 	
 }
-ErrorStatus ADC_StartConversionSyn(uint8_t Channel, RES_TYPE* Result){
+ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16_t* Result){
 	ErrorStatus ADC_STATUS = OK;
 	if (ADC_CHANNEL >= MAX_CHANNEL_NO){
 		ADC_STATUS = WRG_CHANNEL_NO;		
@@ -65,11 +66,10 @@ ErrorStatus ADC_StartConversionSyn(uint8_t Channel, RES_TYPE* Result){
 	}
 	return ADC_STATUS;
 }
-ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint8_t* Result, void (*fncptr)(void){
+ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16_t* Result, void (*fncptr)(void){
 	// ENABLE INTERRUPT ..
 	// CHECK ON ADIF (INT FLAG ) IS CLEARED BY WRITING 1..
 	ErrorStatus ADC_STATUS = OK;
-	static STATE ADC_STATE = IDLE;
 	if (ADC_CHANNEL >= MAX_CHANNEL_NO){
 		ADC_STATUS = WRG_CHANNEL_NO;		
 	}
@@ -85,13 +85,25 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint8_t* Result, void (*fn
 			ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
 			ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
 			/* ENABLE INTERRUPT*/
+			/*GLOBAL INTERRUPT ENABLE MASK*/
+			SET_BIT(HWREG(SREG),GLB_INTERUPPT_BIT);
+			/* PERIPERAL INTERRUPT ENABLE */
 			ADC_ADCSRA_REG ->ADIE = ADC_INTERRUPT_ON;
 			ADC_ADCSRA_REG ->ADIE = ADC_FLAG_CLR;
 			/* START CONVERSION */
 			ADC_ADCSRA_REG->ADSC = START;
+			/* ASIGN GLOBAL VARIABLES TO *RESULT AND END OF JOB FUNCTION*/
+            ADC_RESULT = Result;
+			ptr_END_OF_JOB = fncptr;
 		}
 	}
 	return ADC_STATUS;
 	
 }
 
+ISR (ADC ){
+	/*SAVE RESULT AND CALL FUNC AND SET STATE*/
+	*ADC_RESULT =  HWREG(ADCH);
+	ptr_END_OF_JOB();
+	ADC_STATE = IDLE;
+}

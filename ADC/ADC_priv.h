@@ -21,14 +21,16 @@ typedef enum {
 #define HWREG(REG)                 (*(volatile(uint8_t*)(REG))) 
 #define HWREG_10_BIT(REG)          (*(volatile(uint16_t*)(REG))) 
 /****************ADC_REGESTERS****************************/
-#define  ADMUX      0x27
-#define  ADCSRA     0x26  
-#define  ADCH       0x25
-#define  ADCL       0x24 
+#define  ADMUX      (0x27u)
+#define  ADCSRA     (0x26u)
+#define  ADCH       (0x25u)
+#define  ADCL       (0x24u) 
 
-#define  SFIOR      0x50
-#define  SREG       0x5F  
+#define  SFIOR      (0x50u)
+#define  SREG       (0x5Fu)  
 
+
+#define  GLB_INTERUPPT_BIT (7u)
 /**********************ADMUX******************************/
 /*BITS 0 TO 4*/
 typedef enum{
@@ -158,6 +160,8 @@ typedef struct {
 }ADC_SFIOR;
 
 
+
+
 /***************************** MODULE STRUCT ******************************/
 typedef struct {
 	ADC_ADCSRA* REG_ADCSRA;
@@ -166,7 +170,10 @@ typedef struct {
 }ADC_MODULE_INIT;
 
 
-
+typedef enum{
+	IDLE,
+	BUSY
+}STATE;
 
 typedef struct {
 	
@@ -200,15 +207,14 @@ typedef struct {
 	void (*ptrfunc)(void);
 }ADC_CHAIN_GRP;
 /*************************GLOBAL VARIABLES***************************/
+STATE ADC_STATE = IDLE;
+uint16_t ADC_RESULT;
+
+
+
 /* Array of Struct with length of chain */
 ADC_CHAIN_GRP ADC_CHAIN_CH[CHAIN_LEN];
-#if ADC_RESOLUTION == ADC_8_BITS 
-	static uint8_t ADC_CH_RESULT[CHAIN_LEN];
-	#define RES_TYPE   uint8_t
-#elif ADC_RESOLUTION == ADC_10_BITS 
-	static uint16_t ADC_CH_RESULT[CHAIN_LEN];
-	#define RES_TYPE   uint16_t
-#endif
+static uint16_t ADC_CH_RESULT[CHAIN_LEN];
 static uint8_t ADC_CH[CHAIN_LEN];
 void (*ADC_FUNC_PTR)(void)[CHAIN_LEN];
 
