@@ -69,6 +69,7 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint8_t* Result, void (*fn
 	// ENABLE INTERRUPT ..
 	// CHECK ON ADIF (INT FLAG ) IS CLEARED BY WRITING 1..
 	ErrorStatus ADC_STATUS = OK;
+	static STATE ADC_STATE = IDLE;
 	if (ADC_CHANNEL >= MAX_CHANNEL_NO){
 		ADC_STATUS = WRG_CHANNEL_NO;		
 	}
@@ -76,10 +77,19 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint8_t* Result, void (*fn
 		ADC_STATUS = NOK;	
 	}
 	else {
-		ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
-		ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
-		/*write code */
-		
+		if (BUSY == ADC_STATE )	{
+			/* code */
+		}
+		else{
+			ADC_STATE = BUSY;
+			ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
+			ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
+			/* ENABLE INTERRUPT*/
+			ADC_ADCSRA_REG ->ADIE = ADC_INTERRUPT_ON;
+			ADC_ADCSRA_REG ->ADIE = ADC_FLAG_CLR;
+			/* START CONVERSION */
+			ADC_ADCSRA_REG->ADSC = START;
+		}
 	}
 	return ADC_STATUS;
 	
