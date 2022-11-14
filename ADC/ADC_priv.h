@@ -208,8 +208,8 @@ typedef struct {
 }ADC_CHAIN_GRP;
 /*************************GLOBAL VARIABLES***************************/
 STATE ADC_STATE = IDLE;
-uint16_t ADC_RESULT;
-
+uint16_t *ADC_RESULT;
+void (*ptr_END_OF_JOB)(void);
 
 
 /* Array of Struct with length of chain */

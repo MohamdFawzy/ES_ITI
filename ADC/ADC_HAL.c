@@ -101,7 +101,8 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16_t* Result, void (*f
 	
 }
 
-ISR (ADC ){
+void __vector_16 (void)__attribute__((signal));
+void __vector_16(void){
 	/*SAVE RESULT AND CALL FUNC AND SET STATE*/
 	*ADC_RESULT =  HWREG(ADCH);
 	ptr_END_OF_JOB();
