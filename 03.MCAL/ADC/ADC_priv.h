@@ -8,18 +8,10 @@ File name: 	ADC_priv.h
 #define ADC_PRIVATE_H
 
 #include "..\..\00.LIB\Std_Types.h"
+#include "..\..\00.LIB\Glb_Def.h"
 #include "ADC_cfg.h"
 #include "ADC_interface.h"
 
-typedef enum {
-	OK,
-	NOK, 
-	WRG_CHANNEL_NO,
-	ADC_SYNC_TIME_EXCEEDED
-}ErrorStatus;
-
-#define HWREG(REG)         *(volatile uint8_t*)(REG)
-#define HWREG_16Bit(REG)   *(volatile uint16_t*)(REG)
 /****************ADC_REGESTERS****************************/
 #define  ADMUX      (0x27u)
 #define  ADCSRA     (0x26u)
@@ -87,7 +79,7 @@ typedef enum{
 /*************************************ADCSRA*********************************/
 /* BIT 0:2  PRESCALER */
 typedef enum {
-	PRESCALER_2,
+	PRESCALER_2_Default,
 	PRESCALER_2,
 	PRESCALER_4,
 	PRESCALER_8,
@@ -140,23 +132,23 @@ typedef enum{
 /*BIT 4 should be zero (reserved)*/
 /********************************REG_STRUCT*********************************/
 typedef struct{
-	ADC_Channel_Sel        MUX     :5;
-	ADC_Data_Adj           ADLAR   :1;
-	ADC_Reference_Sel      REFS    :2;
+	uint8_t           MUX     :5;
+	uint8_t           ADLAR   :1;
+	uint8_t           REFS    :2;
 }ADC_ADMUX;
 
 typedef struct {
-	ADC_PRESCALER          ADPS    :3;
-	ADC_INTERRUPT_ENABLE   ADIE    :1;
-	ADC_INTERRUPT_FLAG     ADIF    :1;
-	ADC_AUTO_TRIGGER       ADATE   :1;
-	ADC_CONVERSION         ADSC    :1;
-	ADC_ENABLE             ADEN    :1;
+	uint8_t          ADPS    :3;
+	uint8_t          ADIE    :1;
+	uint8_t          ADIF    :1;
+	uint8_t          ADATE   :1;
+	uint8_t          ADSC    :1;
+	uint8_t          ADEN    :1;
 }ADC_ADCSRA;
 
 typedef struct {
-	uint8_t                  RESERVED   :5;
-	ADC_AUTO_TRIGGER_SOURCE  ADTS       :3;
+	uint8_t          RESERVED   :5;
+	uint8_t          ADTS       :3;
 }ADC_SFIOR;
 
 
@@ -170,18 +162,10 @@ typedef struct {
 }ADC_MODULE_INIT;
 
 
-typedef enum{
-	IDLE,
-	BUSY
-}STATE;
 
-typedef struct {
-	
-}ADC_DATA;
 
 /***************************DEFINATIONS******************************/
-#define COUNT_START                   (0u)
-#define MAX_TIME_OUT                  (1000u)
+
 typedef enum{
 	ADC_8_BITS,
 	ADC_10_BITS
@@ -208,16 +192,17 @@ typedef struct {
 }ADC_CHAIN_GRP;
 /*************************GLOBAL VARIABLES***************************/
 STATE ADC_STATE = IDLE;
-uint16_t *ADC_RESULT;
+uint16__t *ADC_RESULT;
 void (*ptr_END_OF_JOB)(void);
 
 
 /* Array of Struct with length of chain */
+/*
 ADC_CHAIN_GRP ADC_CHAIN_CH[CHAIN_LEN];
 static uint16_t ADC_CH_RESULT[CHAIN_LEN];
 static uint8_t ADC_CH[CHAIN_LEN];
 void (*ADC_FUNC_PTR[CHAIN_LEN])(void);
-
+*/
 
 
 

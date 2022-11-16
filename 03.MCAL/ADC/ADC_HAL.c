@@ -27,7 +27,7 @@ void ADC_Init(){
 	#endif
 	
 }
-ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16_t* Result){
+ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16__t* Result){
 	ErrorStatus ADC_STATUS = OK;
 	if (ADC_CHANNEL >= MAX_CHANNEL_NO){
 		ADC_STATUS = WRG_CHANNEL_NO;		
@@ -36,9 +36,9 @@ ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16_t* Result){
 		ADC_STATUS = NOK;	
 	}
 	else {
-		uint16_t ADC_TIME_COUNT = COUNT_START;
+		uint16__t ADC_TIME_COUNT = COUNT_START;
 		ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
-		ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
+		//ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
 		/* SELECT CHANNEL */
 		
 		/* START CONVERSION */
@@ -58,7 +58,7 @@ ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16_t* Result){
 				*Result = HWREG(ADCH);
 			}
 			else if (ADC_10_BITS==ADC_RESOLUTION){ /*READ BOTH */
-				*Result = HWREG_10_BIT(ADCL);
+				*Result = HWREG_16Bit(ADCL);
 			}
 			else;
 		}
@@ -66,7 +66,7 @@ ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16_t* Result){
 	}
 	return ADC_STATUS;
 }
-ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16_t* Result, void (*fncptr)(void){
+ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16__t* Result, void (*fncptr)(void)){
 	// ENABLE INTERRUPT ..
 	// CHECK ON ADIF (INT FLAG ) IS CLEARED BY WRITING 1..
 	ErrorStatus ADC_STATUS = OK;
@@ -83,7 +83,7 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16_t* Result, void (*f
 		else{
 			ADC_STATE = BUSY;
 			ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
-			ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
+			//ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
 			/* ENABLE INTERRUPT*/
 			/*GLOBAL INTERRUPT ENABLE MASK*/
 			SET_BIT(HWREG(SREG),GLB_INTERUPPT_BIT);
@@ -104,7 +104,7 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16_t* Result, void (*f
 void __vector_16 (void)__attribute__((signal));
 void __vector_16(void){
 	/*SAVE RESULT AND CALL FUNC AND SET STATE*/
-	ADC_RESULT =  HWREG(ADCH);
+	*ADC_RESULT =  HWREG(ADCH);
 	ptr_END_OF_JOB();
 	ADC_STATE = IDLE;
 }

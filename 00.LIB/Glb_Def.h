@@ -10,7 +10,7 @@
 
 
 #define HWREG(REG)         *(volatile uint8_t*)(REG)
-#define HWREG_16Bit(REG)   *(volatile uint16_t*)(REG)
+#define HWREG_16Bit(REG)   *(volatile uint16__t*)(REG)
 
 #define COUNT_START                   (0u)
 #define MAX_TIME_OUT                  (1000u)

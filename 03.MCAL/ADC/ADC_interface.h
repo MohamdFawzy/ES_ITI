@@ -12,8 +12,8 @@ File name: 	ADC_interface.h
 
 /*********************FUNCTIONS_PROTOTYPES***************/
 void ADC_Init(void);
-ErrorStatus ADC_StartConversionSyn  (uint8_t Channel, uint8_t* Result);
-ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint8_t* Result, void (*fncptr)(void);
+ErrorStatus ADC_StartConversionSyn  (uint8_t Channel, uint16__t* Result);
+ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16__t* Result, void (*fncptr)(void));
 
 
 #endif
