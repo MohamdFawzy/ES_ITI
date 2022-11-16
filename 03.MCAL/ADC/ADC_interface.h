@@ -16,4 +16,5 @@ ErrorStatus ADC_StartConversionSyn  (uint8_t Channel, uint16__t* Result);
 ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16__t* Result, void (*fncptr)(void));
 
 
+
 #endif

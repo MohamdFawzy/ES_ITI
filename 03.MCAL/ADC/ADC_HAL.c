@@ -52,7 +52,7 @@ ErrorStatus ADC_StartConversionSyn(uint8_t Channel, uint16__t* Result){
 		}
 		else{
 			/* CLEAR ADIF FLAG MANUALLY */
-			ADC_ADCSRA_REG->ADIF = ADC_FLAG_CLR;
+			ADC_ADCSRA_REG->ADIF = CLR_FLAG;
 			/* SAVE DATA */
 			if (ADC_8_BITS==ADC_RESOLUTION){ /*READ ADHL ONLY*/
 				*Result = HWREG(ADCH);
@@ -86,10 +86,10 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16__t* Result, void (*
 			//ADC_ADMUX* ADC_ADMUX_REG =HWREG(ADMUX);
 			/* ENABLE INTERRUPT*/
 			/*GLOBAL INTERRUPT ENABLE MASK*/
-			SET_BIT(HWREG(SREG),GLB_INTERUPPT_BIT);
+			GLB_INTERUPPT_ENABLE;
 			/* PERIPERAL INTERRUPT ENABLE */
-			ADC_ADCSRA_REG ->ADIE = ADC_INTERRUPT_ON;
-			ADC_ADCSRA_REG ->ADIE = ADC_FLAG_CLR;
+			ADC_ADCSRA_REG ->ADIE = INTERRUPT_ON;
+			ADC_ADCSRA_REG ->ADIF = ADC_FLAG_CLR;
 			/* START CONVERSION */
 			ADC_ADCSRA_REG->ADSC = START;
 			/* ASIGN GLOBAL VARIABLES TO *RESULT AND END OF JOB FUNCTION*/
@@ -101,10 +101,12 @@ ErrorStatus ADC_StartConversionAsyn (uint8_t Channel, uint16__t* Result, void (*
 	
 }
 
-void __vector_16 (void)__attribute__((signal));
 void __vector_16(void){
 	/*SAVE RESULT AND CALL FUNC AND SET STATE*/
 	*ADC_RESULT =  HWREG(ADCH);
 	ptr_END_OF_JOB();
+	/* CLEAR ADIF FLAG MANUALLY */
+	ADC_ADCSRA* ADC_ADCSRA_REG = HWREG(ADCSRA);
+	ADC_ADCSRA_REG->ADIF = CLR_FLAG;
 	ADC_STATE = IDLE;
 }

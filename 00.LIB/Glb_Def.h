@@ -15,6 +15,14 @@
 #define COUNT_START                   (0u)
 #define MAX_TIME_OUT                  (1000u)
 
+/* Global REG */
+#define  SFIOR      (0x50u)
+#define  SREG       (0x5Fu)
+
+#define  GLB_INTERUPPT_BIT (7u)
+#define  GLB_INTERUPPT_ENABLE  SET_BIT(HWREG(SREG),GLB_INTERUPPT_BIT)
+#define  GLB_INTERUPPT_DISABLE CLR_BIT(HWREG(SREG),GLB_INTERUPPT_BIT)
+
 typedef enum{
 	IDLE,
 	BUSY
@@ -34,6 +42,9 @@ typedef enum {
 	TMR_SYNC_TIME_EXCEEDED
 }ErrorStatus;
 
-
+typedef enum{
+	INTERRUPT_OFF,
+	INTERRUPT_ON
+}INTERRUPT_ENABLE;
 
 #endif /* GLB_DEF_H_ */

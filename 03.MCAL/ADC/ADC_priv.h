@@ -90,10 +90,10 @@ typedef enum {
 }ADC_PRESCALER;
 
 /* BIT 3 INTERRUPT ENABLE  	SREG_I_BIT(bit 7) SHOULD BE 1*/
-typedef enum{
+/*typedef enum{
 	ADC_INTERRUPT_OFF,
 	ADC_INTERRUPT_ON
-}ADC_INTERRUPT_ENABLE;
+}ADC_INTERRUPT_ENABLE;*/
 
 /* BIT 4 INTERRUPT FLAG CLEARED BY WRITING 1 */
 typedef enum {
@@ -204,6 +204,7 @@ static uint8_t ADC_CH[CHAIN_LEN];
 void (*ADC_FUNC_PTR[CHAIN_LEN])(void);
 */
 
-
+/*********************** ISR PROTOTYPES ****************************/
+void __vector_16 (void)__attribute__((signal));
 
 #endif 
