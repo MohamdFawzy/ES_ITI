@@ -1,0 +1,33 @@
+DIO
+
+1.  The DIO Driver shall provide a service that writes a data word to the assigned DIO port
+2.  The DIO Driver shall provide a service that writes a selectable number of adjoining bits to an assigned part of a DIO port
+3.  The DIO Driver shall provide a service for write access to single DIO channels
+4.  The DIO Driver shall provide a service for reading a data word from the assigned DIO port
+5.  The DIO Driver shall provide a service for reading a selectable number of adjoining bits from an assigned part of a DIO port
+6.  The DIO Driver shall provide a service for reading one bit of an assigned DIO channel
+7.  The DIO Driver shall provide a service to flip
+8.  The DIO driver shall allow reading from and writing to DIO ports, channel groups and channels
+
+9.  Provide atomicity of DIO access
+
+PORT
+
+1.The Port driver shall allow the static configuration of the following options for each port
+                  Mandatory parameters:
+ 			 pin usage (e.g. DIO, ADC, SPI, ...)
+			 pin direction (input, output)
+			 pin level init value
+			 pin direction changeable during runtime (yes/no)
+		Optional parameters (only if supported by hardware):
+			 activation of internal pull-ups/pull-downs
+			 slew rate control
+			 input thresholds
+			 pin driver mode (push-pull/open drain)
+			 further microcontroller specific properties 
+2. The port driver shall allow the static configuration of the port pin names
+3. The Port driver shall provide a service for setting the direction of port pins during runtime
+4.  The Port driver shall provide a service to refresh the direction of all configured ports
+
+6.  All re-entrant functions of the Port Driver shall perform port register access actions in an atomic way
+7.  Ports and port pins that are not used shall be set to a defined state
